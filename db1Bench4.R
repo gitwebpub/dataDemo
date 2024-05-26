@@ -1,5 +1,12 @@
 
 p.model.d <- function(model) {
+  # Note. Ali p.157
+  # rstandard(reg) : int. studentized res(ri) ; sig.hat (unbiased estimate of sd) is used.
+  # rstudnet(reg) : ext. studentized res(ri*) ; sig.hat(i) is used
+  # Hadi uses [rstandard(reg)]
+  # For simplicity of terminology and presentation,
+  # *studentized residuals* as the std. residuals.
+  
   # Extract data used in the model
   data <- model.frame(model)
   oldpar <- par(mfrow = c(1, 2))
@@ -36,8 +43,10 @@ table.influence <- function(model) {
   cooks_distance <- cooks.distance(model)
   residuals <- rstudent(model)
   dfits_values <- residuals * sqrt(hat_values / (1 - hat_values))
+
   # Calculate Hadi's influence measure using olsrr package
   hadi_values <- olsrr::ols_hadi(model)$hadi
+  
   # Combine the statistics into a data frame
   influence_measures <- data.frame(
     Std_Res = standard_res,
